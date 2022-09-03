@@ -34,6 +34,20 @@ func (s *Server) FindPartnerHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	var walk *search.Walk
+	for _, wa := range s.OngoingWalks {
+		if wa.User1 == user.Username || wa.User2 == user.Username {
+			walk = &wa
+			break
+		}
+	}
+	if walk != nil {
+		w.WriteHeader(http.StatusOK)
+		body, _ := json.Marshal(walk.Path)
+		w.Write(body)
+		return
+	}
+
 	var req *search.Request
 	for _, u := range s.Requests {
 		if u.Username == user.Username {
@@ -50,8 +64,16 @@ func (s *Server) FindPartnerHandler(w http.ResponseWriter, r *http.Request) {
 
 	for _, other := range s.Requests {
 		if other.Username != req.Username && req.IsValidPartner(other) {
+			path := search.GetClosestLocations(*req, other)
+			walk := search.Walk{
+				User1: req.Username,
+				User2: other.Username,
+				Path:  path,
+			}
+			s.OngoingWalks = append(s.OngoingWalks, walk)
+
 			w.WriteHeader(http.StatusOK)
-			body, _ := json.Marshal(search.GetClosestLocations(*req, other))
+			body, _ := json.Marshal(walk.Path)
 			w.Write(body)
 			return
 		}
@@ -59,10 +81,4 @@ func (s *Server) FindPartnerHandler(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte("No suitable partners found"))
-}
-
-func (s *Server) ConfirmWalkHandler(w http.ResponseWriter, r *http.Request) {
-
-	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("Confirm Walk"))
 }

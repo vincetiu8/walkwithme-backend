@@ -7,6 +7,12 @@ type Request struct {
 	Path     Path   `json:"path"`
 }
 
+type Walk struct {
+	User1 string `json:"user1"`
+	User2 string `json:"user2"`
+	Path  Path   `json:"path"`
+}
+
 type Path struct {
 	StartLocation Location `json:"start_location"`
 	EndLocation   Location `json:"end_location"`
