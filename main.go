@@ -4,9 +4,11 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 
 	h "github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
+	motor2 "github.com/sonr-io/sonr/third_party/types/motor"
 	"walkwithme-backend/handlers"
 )
 
@@ -50,16 +52,16 @@ func main() {
 		panic(err)
 	}
 
-	//aesPskKey, _ := os.ReadFile("aesPskKey")
+	aesPskKey, _ := os.ReadFile("aesPskKey")
 
-	//_, err = s.Mtr.Login(motor2.LoginRequest{
-	//	Did:       "snr1d7w5cr7nxa84gtwgcpv6fhgfrjquvpqygmxq2y",
-	//	Password:  "amongus",
-	//	AesPskKey: aesPskKey,
-	//})
-	//if err != nil {
-	//	panic(err)
-	//}
+	_, err = s.Mtr.Login(motor2.LoginRequest{
+		Did:       "snr1d7w5cr7nxa84gtwgcpv6fhgfrjquvpqygmxq2y",
+		Password:  "amongus",
+		AesPskKey: aesPskKey,
+	})
+	if err != nil {
+		panic(err)
+	}
 
 	r := createRouter(s)
 	headersOk := h.AllowedHeaders([]string{

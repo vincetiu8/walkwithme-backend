@@ -22,7 +22,7 @@ func (s *Server) CreateAccountHandler(w http.ResponseWriter, r *http.Request) {
 	builder, err := s.Mtr.NewObjectBuilder("did:snr:QmTYGoTAsamNDN2UtGBdHeY3GAigFB41fwXmcSjoAY5Fvd")
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		w.Write([]byte("Bad Request"))
+		w.Write([]byte("Unable to get schema"))
 		return
 	}
 
@@ -35,7 +35,7 @@ func (s *Server) CreateAccountHandler(w http.ResponseWriter, r *http.Request) {
 	uploadResp, err := builder.Upload()
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		w.Write([]byte("Bad Request"))
+		w.Write([]byte("Unable to upload object to Sonr"))
 		return
 	}
 
