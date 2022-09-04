@@ -59,7 +59,7 @@ func (s *Server) FindPartnerHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	if walk != nil {
 		w.WriteHeader(http.StatusOK)
-		body, _ := json.Marshal(walk.Path)
+		body, _ := json.Marshal(walk)
 		w.Write(body)
 		return
 	}
