@@ -46,7 +46,9 @@ func distanceBetweenTwoLocations(loc1 Location, loc2 Location) float64 {
 }
 
 func (r Request) IsValidPartner(other Request) bool {
-	return distanceBetweenTwoLocations(r.Path.StartLocation, other.Path.StartLocation) < 1 && distanceBetweenTwoLocations(r.Path.EndLocation, other.Path.EndLocation) < 1
+	startingDist := distanceBetweenTwoLocations(r.Path.StartLocation, other.Path.StartLocation)
+	endingDist := distanceBetweenTwoLocations(r.Path.EndLocation, other.Path.EndLocation)
+	return startingDist < 3 && endingDist < 3
 }
 
 func GetClosestLocations(plan1 Request, plan2 Request) Path {
