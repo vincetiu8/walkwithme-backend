@@ -4,11 +4,9 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"os"
 
 	h "github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
-	motor2 "github.com/sonr-io/sonr/third_party/types/motor"
 	"walkwithme-backend/handlers"
 )
 
@@ -52,24 +50,39 @@ func main() {
 		panic(err)
 	}
 
-	aesPskKey, _ := os.ReadFile("aesPskKey")
+	//aesPskKey, _ := os.ReadFile("aesPskKey")
 
-	_, err = s.Mtr.Login(motor2.LoginRequest{
-		Did:       "snr1d7w5cr7nxa84gtwgcpv6fhgfrjquvpqygmxq2y",
-		Password:  "amongus",
-		AesPskKey: aesPskKey,
-	})
-	if err != nil {
-		panic(err)
-	}
-
-	queryResp, err := s.Mtr.QueryWhatIsByDid("did:snr:QmTYGoTAsamNDN2UtGBdHeY3GAigFB41fwXmcSjoAY5Fvd")
-	fmt.Println(queryResp.WhatIs)
+	//_, err = s.Mtr.Login(motor2.LoginRequest{
+	//	Did:       "snr1d7w5cr7nxa84gtwgcpv6fhgfrjquvpqygmxq2y",
+	//	Password:  "amongus",
+	//	AesPskKey: aesPskKey,
+	//})
+	//if err != nil {
+	//	panic(err)
+	//}
 
 	r := createRouter(s)
-	headersOk := h.AllowedHeaders([]string{"X-Requested-With"})
-	originsOk := h.AllowedOrigins([]string{os.Getenv("ORIGIN_ALLOWED")})
-	methodsOk := h.AllowedMethods([]string{"GET", "HEAD", "POST", "PUT", "OPTIONS"})
+	headersOk := h.AllowedHeaders([]string{
+		"Content-Type",
+		"Content-Length",
+		"Accept-Encoding",
+		"X-CSRF-Token",
+		"Authorization",
+		"accept",
+		"origin",
+		"Cache-Control",
+		"X-Requested-With",
+	})
+	originsOk := h.AllowedOrigins([]string{"*"})
+	credentialsOk := h.AllowCredentials()
+	methodsOk := h.AllowedMethods([]string{
+		"CREATE",
+		"GET",
+		"POST",
+		"PUT",
+		"DELETE",
+	})
+
 	fmt.Println("Listening on port 8080")
-	log.Fatal(http.ListenAndServe(":8080", h.CORS(originsOk, headersOk, methodsOk)(r)))
+	log.Fatal(http.ListenAndServe(":8080", h.CORS(originsOk, headersOk, methodsOk, credentialsOk)(r)))
 }
