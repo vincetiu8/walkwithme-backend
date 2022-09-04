@@ -46,6 +46,7 @@ func (s *Server) CreateAccountHandler(w http.ResponseWriter, r *http.Request) {
 	b, err := json.Marshal(&user)
 
 	w.WriteHeader(http.StatusOK)
+	w.Header().Add("Access-Control-Allow-Origin", "*")
 	w.Write(b)
 }
 
@@ -75,6 +76,7 @@ func (s *Server) LoginHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusBadRequest)
+	w.Header().Add("Access-Control-Allow-Origin", "*")
 	w.Write([]byte("User not found"))
 }
 
@@ -100,6 +102,7 @@ func (s *Server) ChangeNameHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusBadRequest)
+	w.Header().Add("Access-Control-Allow-Origin", "*")
 	w.Write([]byte("User not found"))
 }
 
@@ -125,6 +128,7 @@ func (s *Server) ChangeUsernameHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusBadRequest)
+	w.Header().Add("Access-Control-Allow-Origin", "*")
 	w.Write([]byte("User not found"))
 }
 
@@ -150,5 +154,6 @@ func (s *Server) ChangePasswordHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusBadRequest)
+	w.Header().Add("Access-Control-Allow-Origin", "*")
 	w.Write([]byte("User not found"))
 }

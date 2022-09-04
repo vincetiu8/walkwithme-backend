@@ -35,6 +35,7 @@ func (s *Server) RegisterPlanHandler(w http.ResponseWriter, r *http.Request) {
 	s.Requests = append(s.Requests, req)
 
 	w.WriteHeader(http.StatusOK)
+	w.Header().Add("Access-Control-Allow-Origin", "*")
 	w.Write([]byte("Successfully registered plan"))
 }
 
@@ -96,5 +97,6 @@ func (s *Server) FindPartnerHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusNotFound)
+	w.Header().Add("Access-Control-Allow-Origin", "*")
 	w.Write([]byte("No suitable partners found"))
 }
