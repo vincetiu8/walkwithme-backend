@@ -19,8 +19,8 @@ type Path struct {
 }
 
 type Location struct {
-	Latitude  float64 `json:"latitude"`
-	Longitude float64 `json:"longitude"`
+	Latitude  float64 `json:"lat"`
+	Longitude float64 `json:"lng"`
 }
 
 func distance(lat1 float64, lng1 float64, lat2 float64, lng2 float64) float64 {

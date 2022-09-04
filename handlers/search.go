@@ -16,6 +16,22 @@ func (s *Server) RegisterPlanHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	shift := 0
+	for i, r := range s.Requests {
+		if r.Username == req.Username {
+			s.Requests = append(s.Requests[:i-shift], s.Requests[i-shift+1:]...)
+			shift--
+		}
+	}
+
+	shift = 0
+	for i, r := range s.OngoingWalks {
+		if r.User1 == req.Username || r.User2 == req.Username {
+			s.OngoingWalks = append(s.OngoingWalks[:i-shift], s.OngoingWalks[i-shift+1:]...)
+			shift--
+		}
+	}
+
 	s.Requests = append(s.Requests, req)
 
 	w.WriteHeader(http.StatusOK)
@@ -79,6 +95,6 @@ func (s *Server) FindPartnerHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	w.WriteHeader(http.StatusOK)
+	w.WriteHeader(http.StatusNotFound)
 	w.Write([]byte("No suitable partners found"))
 }

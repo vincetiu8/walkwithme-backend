@@ -37,7 +37,7 @@ func createRouter(s *handlers.Server) *mux.Router {
 	r.HandleFunc("/search/registerplan", s.RegisterPlanHandler).Methods("POST")
 
 	// Search for users
-	r.HandleFunc("/search/findpartner", s.FindPartnerHandler).Methods("GET")
+	r.HandleFunc("/search/findpartner", s.FindPartnerHandler).Methods("POST")
 
 	// Operations when walking
 	// Confirm arrived at destination
@@ -62,6 +62,9 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+
+	queryResp, err := s.Mtr.QueryWhatIsByDid("did:snr:QmTYGoTAsamNDN2UtGBdHeY3GAigFB41fwXmcSjoAY5Fvd")
+	fmt.Println(queryResp.WhatIs)
 
 	r := createRouter(s)
 	headersOk := h.AllowedHeaders([]string{
