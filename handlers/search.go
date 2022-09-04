@@ -89,7 +89,7 @@ func (s *Server) FindPartnerHandler(w http.ResponseWriter, r *http.Request) {
 			s.OngoingWalks = append(s.OngoingWalks, walk)
 
 			w.WriteHeader(http.StatusOK)
-			body, _ := json.Marshal(walk.Path)
+			body, _ := json.Marshal(walk)
 			w.Write(body)
 			return
 		}
