@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 
+	h "github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	motor2 "github.com/sonr-io/sonr/third_party/types/motor"
 	"walkwithme-backend/handlers"
@@ -27,6 +28,9 @@ func createRouter(s *handlers.Server) *mux.Router {
 
 	// Change Password
 	r.HandleFunc("/accounts/password", s.ChangePasswordHandler).Methods("PUT")
+
+	// Change Name
+	r.HandleFunc("/accounts/name", s.ChangeNameHandler).Methods("PUT")
 
 	// Finding other users
 	// Register travel plan
@@ -63,6 +67,9 @@ func main() {
 	fmt.Println(queryResp.WhatIs)
 
 	r := createRouter(s)
+	headersOk := h.AllowedHeaders([]string{"X-Requested-With"})
+	originsOk := h.AllowedOrigins([]string{os.Getenv("ORIGIN_ALLOWED")})
+	methodsOk := h.AllowedMethods([]string{"GET", "HEAD", "POST", "PUT", "OPTIONS"})
 	fmt.Println("Listening on port 8080")
-	log.Fatal(http.ListenAndServe(":8080", r))
+	log.Fatal(http.ListenAndServe(":8080", h.CORS(originsOk, headersOk, methodsOk)(r)))
 }

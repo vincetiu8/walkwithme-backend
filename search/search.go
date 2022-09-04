@@ -50,22 +50,13 @@ func (r Request) IsValidPartner(other Request) bool {
 }
 
 func GetClosestLocations(plan1 Request, plan2 Request) Path {
-	startLocation := plan1.Path.StartLocation
-	endLocation := plan1.Path.EndLocation
-	minDist := distanceBetweenTwoLocations(plan1.Path.StartLocation, plan1.Path.EndLocation)
-	if distanceBetweenTwoLocations(plan1.Path.StartLocation, plan2.Path.EndLocation) < minDist {
-		startLocation = plan1.Path.StartLocation
-		endLocation = plan2.Path.EndLocation
-		minDist = distanceBetweenTwoLocations(plan1.Path.StartLocation, plan2.Path.EndLocation)
+	startLocation := Location{
+		(plan1.Path.StartLocation.Latitude + plan2.Path.StartLocation.Latitude) / 2,
+		(plan1.Path.StartLocation.Longitude + plan2.Path.StartLocation.Longitude) / 2,
 	}
-	if distanceBetweenTwoLocations(plan2.Path.StartLocation, plan1.Path.EndLocation) < minDist {
-		startLocation = plan2.Path.StartLocation
-		endLocation = plan1.Path.EndLocation
-		minDist = distanceBetweenTwoLocations(plan2.Path.StartLocation, plan1.Path.EndLocation)
-	}
-	if distanceBetweenTwoLocations(plan2.Path.StartLocation, plan2.Path.EndLocation) < minDist {
-		startLocation = plan2.Path.StartLocation
-		endLocation = plan2.Path.EndLocation
+	endLocation := Location{
+		(plan1.Path.EndLocation.Latitude + plan2.Path.EndLocation.Latitude) / 2,
+		(plan1.Path.EndLocation.Longitude + plan2.Path.EndLocation.Longitude) / 2,
 	}
 	return Path{StartLocation: startLocation, EndLocation: endLocation}
 }

@@ -45,6 +45,7 @@ func (s *Server) CreateAccountHandler(w http.ResponseWriter, r *http.Request) {
 
 	b, err := json.Marshal(&user)
 
+	w.WriteHeader(http.StatusOK)
 	w.Write(b)
 }
 
@@ -60,14 +61,41 @@ func (s *Server) LoginHandler(w http.ResponseWriter, r *http.Request) {
 	for _, u := range s.Users {
 		if u.Username == user.Username {
 			if u.Password == user.Password {
+				b, _ := json.Marshal(&u)
+
 				w.WriteHeader(http.StatusOK)
-				w.Write([]byte("Successfully logged in"))
+				w.Write(b)
 				return
 			} else {
 				w.WriteHeader(http.StatusBadRequest)
 				w.Write([]byte("Incorrect password"))
 				return
 			}
+		}
+	}
+
+	w.WriteHeader(http.StatusBadRequest)
+	w.Write([]byte("User not found"))
+}
+
+func (s *Server) ChangeNameHandler(w http.ResponseWriter, r *http.Request) {
+	var user struct {
+		Username string `json:"username"`
+		Name     string `json:"new_name"`
+	}
+	err := json.NewDecoder(r.Body).Decode(&user)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte("Bad Request"))
+		return
+	}
+
+	for i, u := range s.Users {
+		if u.Username == user.Username {
+			s.Users[i].Name = user.Name
+			w.WriteHeader(http.StatusOK)
+			w.Write([]byte("Successfully changed name"))
+			return
 		}
 	}
 
